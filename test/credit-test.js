@@ -10,6 +10,8 @@ const masterBalance = BigInt(10e6);
 const amount = BigInt(1e6);
 const fee = 1000;
 const rejectMsg = 'RUNTIME_ERR1007: Teal code rejected by logic';
+const creditProfile = '{"Rating": 600/900}'
+const bytesToString = (b) => String.fromCharCode.apply(null, b)
 
 
 
@@ -98,8 +100,26 @@ describe('Credit Profile Registry Test', function () {
     })
   });
 
-  describe.skip("Credit Profiles:", () => {
-    it('Registrar can create profiles in borrower local state', () => {});
+  describe("Credit Profiles:", () => {
+    it('Registrar can create profiles in borrower local state', () => {
+      assert.isUndefined( runtime.getLocalState(appID, borrower.address, 'credit'))
+
+      // create profile
+      callTxnParams.appArgs = [ 
+        convert.stringToBytes('new_profile'),
+        convert.stringToBytes(creditProfile)
+      ];
+      callTxnParams.accounts = [ borrower.address ]
+      runtime.executeTx(callTxnParams)
+
+      // verify
+      syncAccounts()
+      const localVal = runtime.getLocalState(appID, borrower.address, 'credit');
+      assert.isDefined(localVal)
+      assert.deepEqual(localVal, parsing.stringToBytes(creditProfile), 'credit profile not updated') 
+      assert.equal(creditProfile, bytesToString(localVal))
+ 
+    });
   });
 });
 // import { getProgram } from '@algo-builder/algob';
