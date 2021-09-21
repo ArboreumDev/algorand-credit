@@ -1,7 +1,1 @@
-default:
-    timestamp: 1632221468073
-    metadata:
-        User Checkpoint: Fund Contract Account
-    asa: {}
-    ssc: {}
-    dLsig: {}
+{}
