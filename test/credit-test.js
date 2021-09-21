@@ -1,7 +1,7 @@
 // TODO implement as typescript project
 // see how types would look like at the bottom of this file
-const { getProgram } = require('@algo-builder/algob');
-const { Runtime, AccountStore } = require('@algo-builder/runtime');
+const { getProgram, convert } = require('@algo-builder/algob');
+const { Runtime, AccountStore, expectRuntimeError, RUNTIME_ERRORS } = require('@algo-builder/runtime');
 const { types, parsing } = require('@algo-builder/web');
 const { assert } = require('chai');
 
@@ -9,6 +9,7 @@ const minBalance = BigInt(1e6);
 const masterBalance = BigInt(10e6);
 const amount = BigInt(1e6);
 const fee = 1000;
+const rejectMsg = 'RUNTIME_ERR1007: Teal code rejected by logic';
 
 
 
@@ -26,11 +27,13 @@ describe('Credit Profile Registry Test', function () {
     sign: types.SignType.SecretKey,
     // will be set later
     fromAccount: undefined,
+    appArgs: [],
+    accounts: [],
     appID: 0,
     payFlags: { totalFee: fee }
   };
 
-  this.beforeAll(async function () {
+  this.beforeEach(async function () {
     registrar = new AccountStore(minBalance);
     borrower = new AccountStore(minBalance);
     runtime = new Runtime([registrar, borrower]);
@@ -58,17 +61,46 @@ describe('Credit Profile Registry Test', function () {
     borrower = runtime.getAccount(borrower.address);
   }
 
-  it('Registrar should be stored on registry', () => {
-    const storedAddress = runtime.getGlobalState(appID, 'registrar');
+  describe("Access Control", () => {
+    it('Registrar should be stored on registry', () => {
+      const storedAddress = runtime.getGlobalState(appID, 'registrar');
 
-    const registrarPk = parsing.addressToPk(registrar.address);
+      // verify global state
+      assert.isDefined(storedAddress)
+      assert.deepEqual( storedAddress, parsing.addressToPk(registrar.address), 'registrar not saved on registry')
+    })
 
-    // verify global state
-    assert.isDefined(storedAddress)
-    assert.deepEqual(storedAddress, registrarPk , 'registrar not saved on registry');
+    it('Registrar can transfer rights to new address', () => { 
+      // try reassigning ownership from registrar address
+      callTxnParams.appArgs = [ convert.stringToBytes('reassign_registrar') ];
+      callTxnParams.accounts = [ borrower.address ]
 
-  })
+      runtime.executeTx(callTxnParams)
 
+      syncAccounts()
+      const storedAddress = runtime.getGlobalState(appID, 'registrar');
+      assert.isDefined(storedAddress)
+      assert.deepEqual( storedAddress, parsing.addressToPk(borrower.address), 'registrar entry has not changed')
+    })
+
+    it('calls from non-registrar addresses will be rejected', () => {
+      // try reassigning ownership from non-registrar address
+      callTxnParams.appArgs = [ convert.stringToBytes('reassign_registrar') ];
+      callTxnParams.accounts = [ borrower.address ]
+      callTxnParams.fromAccount = borrower.account
+
+      assert.throws(() => runtime.executeTx(callTxnParams),  'RUNTIME_ERR1009'); // rejectMsg);
+
+      syncAccounts()
+      const storedAddress = runtime.getGlobalState(appID, 'registrar');
+      assert.isDefined(storedAddress)
+      assert.deepEqual( storedAddress, parsing.addressToPk(registrar.address), 'registrar has changed unexpectedly')
+    })
+  });
+
+  describe.skip("Credit Profiles:", () => {
+    it('Registrar can create profiles in borrower local state', () => {});
+  });
 });
 // import { getProgram } from '@algo-builder/algob';
 // import { Runtime, AccountStore } from '@algo-builder/runtime';
