@@ -1,0 +1,55 @@
+default:
+    timestamp: 1632221443910
+    metadata: {}
+    asa:
+        minimumASA:
+            creator: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+            txId: JYZLL2MH22PPFFCLFEDFQOOP5XH243Z3ZRN7HUSGKTKKKTHDEEIA
+            assetIndex: 35
+            confirmedRound: 29568
+            assetDef:
+                total: 1
+                decimals: 0
+                unitName: unitName
+                manager: null
+                reserve: null
+                freeze: null
+                clawback: null
+                defaultFrozen: false
+            deleted: false
+        minimumASA1:
+            creator: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+            txId: L4A2EAA2PIYOUUBIXNKK3GO3UH2VEDQZ64HTGBIQWWRWZGSCFIGQ
+            assetIndex: 36
+            confirmedRound: 29570
+            assetDef:
+                total: 1
+                decimals: 0
+                unitName: unitName
+                manager: null
+                reserve: null
+                freeze: null
+                clawback: null
+                defaultFrozen: false
+            deleted: false
+        allFieldASA:
+            creator: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+            txId: ON5GWFGSDWTDASYKTYTKGPBQREACD4PA53PAXHXYJBZ5INIGEVLA
+            assetIndex: 37
+            confirmedRound: 29572
+            assetDef:
+                total: 1
+                decimals: 0
+                defaultFrozen: true
+                unitName: unitName
+                url: url
+                metadataHash: "12312442142141241244444411111133"
+                note: note
+                noteb64: noteb64
+                manager: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+                reserve: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+                freeze: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+                clawback: WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE
+            deleted: false
+    ssc: {}
+    dLsig: {}

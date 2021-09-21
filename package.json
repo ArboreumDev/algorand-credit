@@ -1,0 +1,13 @@
+{
+  "name": "creditProfiles",
+  "version": "1.0.0",
+  "description": "simple stateful contract to store credit profiles on algorand blockchain",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@algo-builder/algob": "^1.2.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4"
+  }
+}
