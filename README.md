@@ -1,3 +1,4 @@
+(slightly adapted readme:)
 This is a boilerplate `algob` project with ASA deployment and funding a smart contract (in TEAL & PyTEAL)
 
 To run the `sample-project`:
@@ -11,10 +12,20 @@ To run the `sample-project`:
 
   - After this specify your `network configurations`.
 
-* Install `Algo Builder`
+>DJU:
+The algob.config.js in this repo matches the local network that one gets when following the instructions in the
+[algob/infrastructure]( https://github.com/scale-it/algo-builder/tree/master/infrastructure) directory. 
+
+To start it cd into then do
+
+➜  ~ goal network start -r ./node_data
+
+* Install `Algo Builder` 
 
   - `yarn add @algo-builder/algob` or
   - `yarn link @algo-builder/algob` (with local installation, this is recommended if you want to use `algob` with latest, not released version). Read more about it [here](https://github.com/scale-it/algo-builder#installation).
+
+> DJU: just do `yarn`
 
 * Deploy ASA and Smart Contracts:
 
@@ -39,18 +50,16 @@ In the `sample-project` folder you'll have following items:
 * `assets/`: Directory for assets and contracts files:
     - `accounts_user.yaml` : It has sample accounts
     - `asa.yaml` : It has sample specifications for Algorand Standard Assets (ASA)
-    - `fee-check.teal` : It's a smart contract file. It checks the provided fee is at least 10,000 microalgos
-    - `escrow.py`: Smart contract (in PyTEAL), only approves transfer to a specific address (hardcoded in the contract).
+    - `credit_registry_contract.py`: Registry to write credit-profiles to user local state
     - You can change or add ASA, Smart Contracts in this folder.
 
 * `scripts/`: Directory for scripts to deploy and run your assets and contracts:
-    - `0-sampleScript.js` : This script shows how to deploy ASA.
-    - `1-sampleScript.js` : This script shows how to deploy ASC.
-    - `2-escrow-account.js`: This script funds an escrow contract with a hardcoded template parameter (passed in script)
+    - `0-deploy-and-fund.js` : Deploys the credit registry and funds some users
+    - `1-sampleScript.js` : ~This script shows how to deploy ASC.~
+    - `2-escrow-account.js`: ~This script funds an escrow contract with a hardcoded template parameter (passed in script)~
 
 * `test/`: Directory for test files for testing your assets and smart contracts:
-    - `sample-test.js` : This is a basic example of how tests should be and how they work.
-    - You can add tests for your scripts here.
+    - `credit-test.js` : Testing Access control and writing to local user storage
 
 * `algob.config.js`: Algob configuration file
 
