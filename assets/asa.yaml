@@ -1,12 +1,11 @@
 # minimum ASA definition (all optional fields omitted)
-minimumASA:
+supplier1LogAsset:
   total: 1
   decimals: 0
-  unitName: "unitName"
-minimumASA1:
-  total: 1
-  decimals: 0
-  unitName: "unitName"
+  unitName: "unit"
+  # optInAccNames: ["registrar"]
+  reserve: ""
+  clawback: ""
 ## whole ASA definition (contains all fields)
 allFieldASA:
   total: 1
