@@ -1,4 +1,4 @@
-const { globalZeroAddress } = require("@algo-builder/algob");
+const { globalZeroAddress, balanceOf } = require("@algo-builder/algob");
 
 async function run (runtimeEnv, deployer) {
   console.log(deployer.accounts)
