@@ -19,11 +19,14 @@
 // ## ACCOUNTS USING mnemonic ##
 const { mkAccounts, algodCredentialsFromEnv } = require("@algo-builder/algob");
 let accounts = mkAccounts([{
+  name: "master",
   // This account is created using `make setup-master-account` command from our
   // `/infrastructure` directory. It already has many ALGOs
-  name: "master",
-  addr: "WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE",
-  mnemonic: "enforce drive foster uniform cradle tired win arrow wasp melt cattle chronic sport dinosaur announce shell correct shed amused dismiss mother jazz task above hospital"
+  // addr: "WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE",
+  // mnemonic: "enforce drive foster uniform cradle tired win arrow wasp melt cattle chronic sport dinosaur announce shell correct shed amused dismiss mother jazz task above hospital",
+  // one of the accounts that is used by ./sandbox
+  addr: "PHZQD5BEJPPNPYQSZ7PGJRUWKNDZ2WRV4DD446BQ7MGOKXRHNJ24PRIJWI",
+  mnemonic: "choice earth will mind edge captain hire suspect cross penalty lyrics obtain recall silly raise you differ similar wet relief above phone frame ability spoon"
 },
 // new accounts copied from algob/examples/asa
 // usually created with using `algob gen-accounts`.
