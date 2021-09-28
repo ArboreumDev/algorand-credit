@@ -18,4 +18,28 @@ exports.mkParam = function (senderAccount, receiverAddr, amount, payFlags) {
     amountMicroAlgos: amount,
     payFlags: payFlags
   };
+
 };
+
+
+exports.encodeToNoteFieldBytes = (s) => {
+    const enc = new TextEncoder();
+    let note = enc.encode(s);  
+    let r = Buffer.from(note).toString("base64");
+    return r
+ };
+
+
+exports.decodeFromNoteFieldBytes = (note) => {
+    const buff = Buffer.from(note, 'base64');
+    // decode buffer as UTF-8
+    const str = buff.toString('utf-8');
+    return str
+ };
+
+exports.decodeFromNoteFieldBytesToObject = (note) => {
+    const buff = Buffer.from(note, 'base64');
+    // decode buffer as UTF-8 and parse
+    return JSON.parse(buff.toString('utf-8'));
+ };
+
