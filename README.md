@@ -1,8 +1,4 @@
 (slightly adapted readme:)
-This is a boilerplate `algob` project with ASA deployment and funding a smart contract (in TEAL & PyTEAL)
-
-To run the `sample-project`:
-
 * First you need to set the configuration in `algob.config.js` file:
 
   - Specify accounts you want to use, there are multiple ways to do it. You can see [here](/docs/algob-config.md)
@@ -20,12 +16,11 @@ To start it cd into then do
 
 ➜  ~ goal network start -r ./node_data
 
-* Install `Algo Builder` 
+> this doesnt work with the indexer...
 
-  - `yarn add @algo-builder/algob` or
-  - `yarn link @algo-builder/algob` (with local installation, this is recommended if you want to use `algob` with latest, not released version). Read more about it [here](https://github.com/scale-it/algo-builder#installation).
+instead do (in the same location:)
 
-> DJU: just do `yarn`
+➜  ~ make sandbox-up
 
 * Deploy ASA and Smart Contracts:
 
@@ -39,23 +34,24 @@ To start it cd into then do
 
   - `algob run scripts/path_to/file1`
   - Don’t use algob run for deployments. This should be used only for auxiliary scripts, like ad-hock transactions (example: draining an account).
-
+  existing scripts:
+    - log-tx.js: Makes a zero-asset transfer from the registrar to themself, with an object in the note-field 
+    - read-logs.js: initializes an indexer and demonstrates how to search for all log-txs or just the ones of a certain type
 
 * Run tests:
 
   - `algob test` (runs mocha in project root)
 
-In the `sample-project` folder you'll have following items:
+Directory Structure:
 
 * `assets/`: Directory for assets and contracts files:
     - `accounts_user.yaml` : It has sample accounts
     - `asa.yaml` : It has sample specifications for Algorand Standard Assets (ASA)
     - `credit_registry_contract.py`: Registry to write credit-profiles to user local state
-    - You can change or add ASA, Smart Contracts in this folder.
 
 * `scripts/`: Directory for scripts to deploy and run your assets and contracts:
     - `0-deploy-and-fund.js` : Deploys the credit registry and funds some users
-    - `1-sampleScript.js` : ~This script shows how to deploy ASC.~
+    - `1-sampleScript.js` : This script deploys the log-asset
     - `2-escrow-account.js`: ~This script funds an escrow contract with a hardcoded template parameter (passed in script)~
 
 * `test/`: Directory for test files for testing your assets and smart contracts:
