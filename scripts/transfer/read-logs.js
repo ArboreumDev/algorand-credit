@@ -6,7 +6,10 @@
  const { executeTransaction, balanceOf, runtime } = require('@algo-builder/algob');
  const { types } = require('@algo-builder/web');
  const algosdk = require('algosdk');
-const { encodeToNoteFieldBytes, decodeFromNoteFieldBytes } = require('./common');
+const { 
+    encodeToNoteFieldBytes, decodeFromNoteFieldBytes, appPrefix,
+    decodeFromPrefixedNoteFieldBytesToObject 
+} = require('./common');
 
 
  async function run (runtimeEnv, deployer) {
@@ -35,22 +38,27 @@ const { encodeToNoteFieldBytes, decodeFromNoteFieldBytes } = require('./common')
     // console.log(encodeToNoteFieldBytes('testString'), tx.note)
 
     // or only the ones with a given prefix
-    const repay_prefix = encodeToNoteFieldBytes('{"type":"repay",')
-    console.log('looking for prefix:', repay_prefix)
+    // console.log('looking for prefix:', repay_prefix)
+    // const repay_prefix = encodeToNoteFieldBytes('{"type":"repay",')
+    const appPrefixBytes = encodeToNoteFieldBytes(appPrefix)
+    console.log('looking for prefix:', appPrefixBytes, ` =>(${appPrefix})`)
     const txInfo = await indexerClient.lookupAssetTransactions(logASA.assetIndex)
         .txType('axfer') // show transfers only
-        .notePrefix(repay_prefix)
+        // .notePrefix(repay_prefix)
+        .notePrefix(appPrefixBytes)
         .do()
     if (txInfo.transactions.length) {
         console.log('...looking at first example:')
         tx = txInfo.transactions[0]
-        raw = decodeFromNoteFieldBytes(tx.note)
         try {
-            const noteObject = JSON.parse(raw)
+            // const noteObject = JSON.parse(raw)
+            const noteObject = decodeFromPrefixedNoteFieldBytesToObject(tx.note)
             console.log(noteObject)
         }
         catch (err) {
-            console.log('couldnt parse to json:', raw)
+            rawStr = decodeFromNoteFieldBytes(tx.note)
+            console.log('failure to decode:',tx.note)
+            console.log('raw string :', rawStr)
         }
     } else {
         console.log('None found')

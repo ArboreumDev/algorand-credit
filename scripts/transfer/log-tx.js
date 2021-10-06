@@ -5,7 +5,7 @@
 
  const { executeTransaction, balanceOf, runtime } = require('@algo-builder/algob');
  const { types } = require('@algo-builder/web');
- const { encodeToNoteFieldBytes } = require('./common');
+ const { appPrefix } = require('./common');
 
  
  async function run (runtimeEnv, deployer) {
@@ -18,9 +18,9 @@
  
    // query accounts from config
    const registrar = deployer.accountsByName.get('registrar');
-   const note = JSON.stringify({type: 'repay', amount: 1000})
-   const noteAsBytes = encodeToNoteFieldBytes(note)
-   console.log(noteAsBytes)
+
+   const noteObj = {type: 'repay', amount: 1000}
+   const note = appPrefix + JSON.stringify(noteObj)
  
    // execute asset transfer transaction
    await executeTransaction(deployer, {
