@@ -1,4 +1,5 @@
 # minimum ASA definition (all optional fields omitted)
+# to be owned by us and transfered to create log-entries by us
 supplier1LogAsset:
   total: 1
   decimals: 0
@@ -6,6 +7,20 @@ supplier1LogAsset:
   # optInAccNames: ["registrar"]
   reserve: ""
   clawback: ""
+  # metadataHash: "bafybeif7mfqmv6v5jimdfgr6yi4zkqv3qitlmxoqfdw5wkcxwxsf65ojfu" # hashed sample_loan.json
+
+# minimum ASA definition (all optional fields omitted)
+# to be owned by lender, but frozen and transfered to create log-entries with the clawback-address
+supplier2LogAsset:
+  total: 1
+  decimals: 0
+  defaultFrozen: true
+  unitName: "unit"
+  optInAccNames: ["lender"]
+  reserve: ""
+  # clawback: "PHZQD5BEJPPNPYQSZ7PGJRUWKNDZ2WRV4DD446BQ7MGOKXRHNJ24PRIJWI" # sanbox
+  # clawback: "WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE" # goal-net
+ 
 ## whole ASA definition (contains all fields)
 allFieldASA:
   total: 1

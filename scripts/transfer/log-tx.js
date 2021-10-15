@@ -19,7 +19,7 @@
    // query accounts from config
    const registrar = deployer.accountsByName.get('registrar');
 
-   const noteObj = {type: 'repay', amount: 1000}
+   const noteObj = {type: 'repay', amount: 1000, utr: "UTR:23498274140243482357"}
    const note = appPrefix + JSON.stringify(noteObj)
  
    // execute asset transfer transaction
