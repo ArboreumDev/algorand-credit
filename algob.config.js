@@ -15,37 +15,52 @@
   + loading from an environment variable
   + ...
 */
-
-// ## ACCOUNTS USING mnemonic ##
-const { mkAccounts, algodCredentialsFromEnv } = require("@algo-builder/algob");
-let accounts = mkAccounts([{
+const sandboxMaster = {
   name: "master",
-  // This account is created using `make setup-master-account` command from our
-  // `/infrastructure` directory. It already has many ALGOs
-  // addr: "WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE",
-  // mnemonic: "enforce drive foster uniform cradle tired win arrow wasp melt cattle chronic sport dinosaur announce shell correct shed amused dismiss mother jazz task above hospital",
-
   // one of the accounts that is used by ./sandbox
   addr: "PHZQD5BEJPPNPYQSZ7PGJRUWKNDZ2WRV4DD446BQ7MGOKXRHNJ24PRIJWI",
   mnemonic: "choice earth will mind edge captain hire suspect cross penalty lyrics obtain recall silly raise you differ similar wet relief above phone frame ability spoon"
-},
+};
+const localMaster = {
+  name: "master",
+  // This account is created using `make setup-master-account` command from our
+  // `/infrastructure` directory. It already has many ALGOs
+  addr: "WWYNX3TKQYVEREVSW6QQP3SXSFOCE3SKUSEIVJ7YAGUPEACNI5UGI4DZCE",
+  mnemonic: "enforce drive foster uniform cradle tired win arrow wasp melt cattle chronic sport dinosaur announce shell correct shed amused dismiss mother jazz task above hospital",
+};
+const purestakeMaster = {
+  name: "master",
+  addr: "GJG4ZPX5YJOLIMN3LA4GLSOFKC6KSTHCBITYOSUBAUBE3VHFHXKCISN6ZE",
+  mnemonic: "service elevator scrub deer three dad october purse pulp museum upper famous flash level hobby clean destroy voyage fever excite repair suffer prefer about ostrich"
+}
+
+
 // new accounts copied from algob/examples/asa
 // usually created with using `algob gen-accounts`.
-{
-  name: "registrar",
-  addr: "WHVQXVVCQAD7WX3HHFKNVUL3MOANX3BYXXMEEJEJWOZNRXJNTN7LTNPSTY",
-  mnemonic: "resist derive table space jealous person pink ankle hint venture manual spawn move harbor flip cigar copy throw swap night series hybrid chest absent art"
-}, {
-  name: "borrower1",
-  addr: "2UBZKFR6RCZL7R24ZG327VKPTPJUPFM6WTG7PJG2ZJLU234F5RGXFLTAKA",
-  mnemonic: "found empower message suit siege arrive dad reform museum cake evoke broom comfort fluid flower wheat gasp baby auction tuna sick case camera about flip"
-}, {
-  name: "lender",
-  addr: "EDXG4GGBEHFLNX6A7FGT3F6Z3TQGIU6WVVJNOXGYLVNTLWDOCEJJ35LWJY",
-  mnemonic: "brand globe reason guess allow wear roof leisure season coin own pen duck worth virus silk jazz pitch behave jazz leisure pave unveil absorb kick"
-},
-]);
+const regularAccounts = [
+  {
+    name: "registrar",
+    addr: "WHVQXVVCQAD7WX3HHFKNVUL3MOANX3BYXXMEEJEJWOZNRXJNTN7LTNPSTY",
+    mnemonic: "resist derive table space jealous person pink ankle hint venture manual spawn move harbor flip cigar copy throw swap night series hybrid chest absent art"
+  },
+  {
+    name: "borrower1",
+    addr: "2UBZKFR6RCZL7R24ZG327VKPTPJUPFM6WTG7PJG2ZJLU234F5RGXFLTAKA",
+    mnemonic: "found empower message suit siege arrive dad reform museum cake evoke broom comfort fluid flower wheat gasp baby auction tuna sick case camera about flip"
+  },
+  {
+    name: "lender",
+    addr: "EDXG4GGBEHFLNX6A7FGT3F6Z3TQGIU6WVVJNOXGYLVNTLWDOCEJJ35LWJY",
+    mnemonic: "brand globe reason guess allow wear roof leisure season coin own pen duck worth virus silk jazz pitch behave jazz leisure pave unveil absorb kick"
+  }
+]
 
+
+// ## ACCOUNTS USING mnemonic ##
+const { mkAccounts, algodCredentialsFromEnv } = require("@algo-builder/algob");
+let sandboxAccounts = mkAccounts([sandboxMaster].concat(regularAccounts))
+let localAccounts = mkAccounts([localMaster].concat(regularAccounts))
+let purestakeAccounts = mkAccounts([purestakeMaster])
 
 // ## ACCOUNTS loaded from a FILE ##
 const { loadAccountsFromFileSync } = require("@algo-builder/algob");
@@ -72,11 +87,24 @@ let defaultCfg = {
   // Below is a token created through our script in `/infrastructure`
   // If you use other setup, update it accordignly (eg content of algorand-node-data/algod.token)
   token: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  accounts: accounts,
+  accounts: localAccounts,
   // if you want to load accounts from KMD, you need to add the kmdCfg object. Please read
   // algob-config.md documentation for details.
   // kmdCfg: kmdCfg,
 };
+
+let sandBoxConfig = {
+  host: "http://localhost",
+  port: 4001,
+  // Below is a token created through our script in `/infrastructure`
+  // If you use other setup, update it accordignly (eg content of algorand-node-data/algod.token)
+  token: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  accounts: sandboxAccounts,
+  // if you want to load accounts from KMD, you need to add the kmdCfg object. Please read
+  // algob-config.md documentation for details.
+  // kmdCfg: kmdCfg,
+};
+
 
 let purestakeTestNetCfg = {
   host: "https://testnet-algorand.api.purestake.io/ps2",
@@ -86,7 +114,8 @@ let purestakeTestNetCfg = {
   },
   // accounts: testNetAccounts // accounts can be passed as an empty array as well
   // accounts: [], // accounts can be passed as an empty array as well
-  accounts: accounts
+  // ??? not sure if that one will work:
+  accounts: purestakeAccounts, 
 };
 
 // You can also use Environment variables to get Algod credentials
@@ -101,13 +130,14 @@ let envCfg = {
  host: algodCred.host,
  port: algodCred.port,
  token: algodCred.token,
- accounts: accounts
+ accounts: localAccounts
 }
 
 
 module.exports = {
   networks: {
     default: defaultCfg,
+    sandbox: sandBoxConfig,
     purestake: purestakeTestNetCfg,
     prod: envCfg
   }
