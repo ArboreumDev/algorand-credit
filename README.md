@@ -38,6 +38,10 @@ instead do (in the same location:)
     - log-tx.js: Makes a zero-asset transfer from the registrar to themself, with an object in the note-field 
     - read-logs.js: initializes an indexer and demonstrates how to search for all log-txs or just the ones of a certain type
 
+* Deploy custom assets:
+  - Create an USDC-like token on your local network like this:
+  `yarn algob deploy scripts/1-assets.js --force --network <network>` 
+
 * Run tests:
 
   - `algob test` (runs mocha in project root)

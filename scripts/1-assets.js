@@ -1,46 +1,55 @@
 const { globalZeroAddress, balanceOf } = require("@algo-builder/algob");
+const { executeTransaction } = require('@algo-builder/algob');
+const { types } = require('@algo-builder/web');
+// const { accounts } = require('./common/accounts.js');
 
 const { encodeToNoteFieldBytes } = require('./transfer/common');
 var sha256 = require('js-sha256');
 
 async function run (runtimeEnv, deployer) {
   console.log(deployer.accounts)
-  // registrar = deployer.accounts[1]
-  // registrar = deployer.accounts[1]
-  const registrar = deployer.accountsByName.get('registrar');
 
-  // TODO how to hash that such that its not longer than 32 bytes?
-  // const hashed_data = "QmbDihe5MsWE483Ps7xE84MAEfpHjBLxSrGUUxu4VbU9VW"
-  // const metadataHash = encodeToNoteFieldBytes(hashed_data)
-  // const metadataHash = sha256("sfdsf")
-  // note = "testNote"
-
-  // const asaInfo = await deployer.deployASA(
-  //   'supplier1LogAsset',
-  //   // { creator: registrar, metadataHash, note }, // the metadata will not get picked up if
-  //   { creator: registrar},
-  //   {
-  //     freeze: registrar.addr,
-  //     manager: registrar.addr,
-  // })
-
-  // console.log(asaInfo);
-  const lender = deployer.accountsByName.get('lender');
-
-  const asa2Info = await deployer.deployASA(
-    'supplier2LogAsset',
-    { creator: registrar},
+  // CODE to deploy a USDC-like ASA
+  const master = deployer.accountsByName.get('master');
+  const asaInfo = await deployer.deployASA(
+    'usdc',
+    { creator: master},
     {
-      clawback: registrar.addr
+      // clawback: registrar.addr
     }
   )
-  console.log(asa2Info);
+  console.log(asaInfo);
 
+  // // CODE to optIn possible other actors
+  // const registrar = deployer.accountsByName.get('registrar');
+  const borrower = deployer.accountsByName.get('borrower1');
+  const lender = deployer.accountsByName.get('lender');
 
-  b=await balanceOf(deployer, lender.addr, asa2Info.assetIndex);
+  // CODE to fund other accounts with USDC
+  await deployer.optInAccountToASA(asaInfo.assetIndex, 'registrar', { totalFee: 1000 });
+  await deployer.optInAccountToASA(asaInfo.assetIndex, 'borrower1', { totalFee: 1000 });
+  await deployer.optInAccountToASA(asaInfo.assetIndex, 'lender', { totalFee: 1000 });
 
-  // await deployer.addCheckpointKV('User Checkpoint', 'Deploying Log Asset');
-  // // console.log('Sample script for ASC Funding execution has finished!');
+  const fundTx1 = {
+    type: types.TransactionType.TransferAsset,
+    sign: types.SignType.SecretKey,
+    fromAccount: master,
+    toAccountAddr: lender.addr,
+    amount: 200,
+    assetID: asaInfo.assetIndex,
+    payFlags: { totalFee: 1000 }
+  }
+
+  const message = 'funding account';
+  const promises = [
+    executeTransaction(deployer, [fundTx1])
+  ]
+  await Promise.all(promises);
+
+  await balanceOf(deployer, lender.addr, asaInfo.assetIndex);
+
+  await deployer.addCheckpointKV('User Checkpoint', 'Deployed USDC MOCK-Asset');
+  console.log('Sample script for Mock-USDC Creation has finished!');
 }
 
 module.exports = { default: run };
